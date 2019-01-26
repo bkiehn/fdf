@@ -6,7 +6,7 @@
 #    By: bkiehn <bkiehn@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/11/24 19:28:38 by bkiehn            #+#    #+#              #
-#    Updated: 2019/01/22 20:59:56 by bkiehn           ###   ########.fr        #
+#    Updated: 2019/01/25 18:36:14 by bkiehn           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,9 @@ $(NAME):
 	gcc -o $(NAME) $(SRC) -I $(INC) -L $(LIBRARY) -lmlx -framework OpenGL -framework Appkit -lft
 
 all:$(NAME)
+
+debug:
+	gcc -g3 -o $(NAME) $(SRC) -I $(INC) -L $(LIBRARY) -lmlx -framework OpenGL -framework Appkit -lft
 
 clean:
 	rm -f *.o

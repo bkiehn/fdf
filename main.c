@@ -6,7 +6,7 @@
 /*   By: bkiehn <bkiehn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:49:24 by bkiehn            #+#    #+#             */
-/*   Updated: 2019/01/23 22:08:41 by bkiehn           ###   ########.fr       */
+/*   Updated: 2019/01/26 16:40:40 by bkiehn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,113 +56,84 @@ void    draw_line(t_dot *points, int a, int b, t_mlx lx)
     }
 }
 
-void    projection(t_dot *points, int d)
-    {
-        int i;
-        int tempz;
-
-        i = 0;
-        while (i <= 7)
-        {
-            tempz = 500 / (d + points[i].z);
-            points[i].x = points[i].x * tempz + 250;
-            points[i].y = points[i].y * tempz + 250;
-            i++;
-        }
-    }
-
-t_dot    *rotate(t_dot *points, double axis_x, double axis_y, double axis_z)
-    {
-        int     i;
-        t_dot   *pr;
-
-        i = 0;
-        pr = (t_dot*)malloc(sizeof(t_dot) * 8);
-        while (i < 7)
-        {
-            if (axis_x != 0)
-            {
-                pr[i].x = points[i].x;
-                pr[i].y = points[i].y * cos(axis_x) + points[i].z * sin(axis_x);
-                pr[i].z = -points[i].y * sin(axis_x) + points[i].z * cos(axis_x);
-            }
-            if (axis_y != 0)
-            {
-                pr[i].x = points[i].x * cos(axis_y) + points[i].z * sin(axis_y);
-                pr[i].y = points[i].y;
-                pr[i].z = -points[i].x * sin(axis_y) + points[i].z * cos(axis_y);
-            }
-            // else
-            // {
-            //     pr[i].x = points[i].x;
-            //     pr[i].y = points[i].y;
-            //     pr[i].z = points[i].z;
-            // }
-            if (axis_z != 0)
-            {
-                pr[i].x = points[i].x * cos(axis_z) - points[i].y * sin(axis_z);
-                pr[i].y = points[i].x * sin(axis_z) + points[i].y * cos(axis_z);
-                pr[i].z = points[i].z;
-            }
-            i++;
-        }
-        return (pr);
-    }
-
 int     main()
 {
-    t_mlx   lx;
-    t_dot   points[8];
-    t_dot   *points_r;
-    int     i;
-    int     d;
+    t_mlx       lx;
+    t_dot       *points;
+    int         i;
+    double      *angle;
     
-    points[0].x = -20;
-    points[0].y = -20;
-    points[0].z = -20;
-    points[1].x = 20;
-    points[1].y = -20;
-    points[1].z = -20;
-    points[2].x = 20;
-    points[2].y = -20;
-    points[2].z = 20;
-    points[3].x = -20;
-    points[3].y = -20;
-    points[3].z = 20;
-    points[4].x = -20;
-    points[4].y = 20;
-    points[4].z = -20;
-    points[5].x = 20;
-    points[5].y = 20;
-    points[5].z = -20;
-    points[6].x = 20;
-    points[6].y = 20;
-    points[6].z = 20;
-    points[7].x = -20;
-    points[7].y = 20;
-    points[7].z = 20;
+    angle = (double*)malloc(sizeof(double) * 3);
+    points = (t_dot*)malloc(sizeof(t_dot) * 8);
+    i = 0; 
+    
+    points[0].x = -50;
+    points[0].y = 50;
+    points[0].z = 50;
+    points[1].x = 50;
+    points[1].y = 50;
+    points[1].z = 50;
+    points[2].x = 50;
+    points[2].y = 50;
+    points[2].z = -50;
+    points[3].x = -50;
+    points[3].y = 50;
+    points[3].z = -50;
+    points[4].x = -50;
+    points[4].y = -50;
+    points[4].z = 50;
+    points[5].x = 50;
+    points[5].y = -50;
+    points[5].z = 50;
+    points[6].x = 50;
+    points[6].y = -50;
+    points[6].z = -50;
+    points[7].x = -50;
+    points[7].y = -50;
+    points[7].z = -50;
 
     lx.mlx_ptr = mlx_init();
-    lx.win_ptr = mlx_new_window(lx.mlx_ptr, 500, 500, "test");
-    i = 0;
-    d = 100;
-    points_r = rotate(points, 0, 0, M_PI);
-    projection(points_r, d);
+    lx.width = 1000;
+    lx.height = 1000;
+    lx.win_ptr = mlx_new_window(lx.mlx_ptr, lx.width, lx.height, "fdf");
+    
+    angle[0] = 0;
+    angle[1] = 0;
+    angle[2] = 0;
+  
+    while (i < 8)
+    {
+        projection(points, i);
+        rotate(&points, i, angle);
+        center(&points, i, lx);
+        i++;
+    }
+    
 
-    draw_line (points_r, 0, 1, lx);
-    draw_line (points_r, 1, 2, lx);
-    draw_line (points_r, 2, 3, lx);
-    draw_line (points_r, 3, 0, lx);
+    mlx_string_put(lx.mlx_ptr, lx.win_ptr, points[0].x, points[0].y, 0x00ffffff, "0");
+    mlx_string_put(lx.mlx_ptr, lx.win_ptr, points[1].x, points[1].y, 0x00ffffff, "1");
+    mlx_string_put(lx.mlx_ptr, lx.win_ptr, points[2].x, points[2].y, 0x00ffffff, "2");
+    mlx_string_put(lx.mlx_ptr, lx.win_ptr, points[3].x, points[3].y, 0x00ffffff, "3");
+    mlx_string_put(lx.mlx_ptr, lx.win_ptr, points[4].x, points[4].y, 0x00ffffff, "4");
+    mlx_string_put(lx.mlx_ptr, lx.win_ptr, points[5].x, points[5].y, 0x00ffffff, "5");
+    mlx_string_put(lx.mlx_ptr, lx.win_ptr, points[6].x, points[6].y, 0x00ffffff, "6");
+    mlx_string_put(lx.mlx_ptr, lx.win_ptr, points[7].x, points[7].y, 0x00ffffff, "7");
+    
 
-    draw_line (points_r, 4, 5, lx);
-    draw_line (points_r, 5, 6, lx);
-    draw_line (points_r, 6, 7, lx);
-    draw_line (points_r, 7, 4, lx);
+     draw_line (points, 0, 1, lx);
+     draw_line (points, 1, 2, lx);
+     draw_line (points, 2, 3, lx);
+     draw_line (points, 3, 0, lx);
 
-    draw_line (points_r, 0, 4, lx);
-    draw_line (points_r, 1, 5, lx);
-    draw_line (points_r, 2, 6, lx);
-    draw_line (points_r, 3, 7, lx);
+     draw_line (points, 4, 5, lx);
+     draw_line (points, 5, 6, lx);
+     draw_line (points, 6, 7, lx);
+     draw_line (points, 7, 4, lx);
+
+     draw_line (points, 0, 4, lx);
+     draw_line (points, 1, 5, lx);
+     draw_line (points, 2, 6, lx);
+     draw_line (points, 3, 7, lx);
 
     mlx_hook(lx.win_ptr, 2, 0, deal_key, 0);
     mlx_loop(lx.mlx_ptr);

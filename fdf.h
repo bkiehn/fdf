@@ -6,7 +6,7 @@
 /*   By: bkiehn <bkiehn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:52:22 by bkiehn            #+#    #+#             */
-/*   Updated: 2019/01/26 16:15:12 by bkiehn           ###   ########.fr       */
+/*   Updated: 2019/01/26 23:09:10 by bkiehn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "libft/includes/libft.h"
 # include "libft/includes/mlx.h"
 # include <math.h>
+# include <fcntl.h>
 # include <stdio.h>
 
 typedef struct		s_dot
@@ -36,5 +37,8 @@ typedef struct      s_mlx
 void    rotate(t_dot **points, int i, double *angle);
 void    projection(t_dot *points, int i);
 void    center(t_dot **po, int i, t_mlx lx);
+int     rfile(int fd);
+void    draw_line(t_dot *points, int a, int b, t_mlx lx);
+int     deal_key (int key, int param);
 
 #endif

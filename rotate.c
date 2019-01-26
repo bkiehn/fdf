@@ -6,7 +6,7 @@
 /*   By: bkiehn <bkiehn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 18:10:11 by bkiehn            #+#    #+#             */
-/*   Updated: 2019/01/26 16:35:30 by bkiehn           ###   ########.fr       */
+/*   Updated: 2019/01/26 22:54:09 by bkiehn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,3 +69,31 @@ void    center(t_dot **po, int i, t_mlx lx)
         (*po)[i].y += lx.width / 2;
         (*po)[i].z += lx.width / 2;
 }
+
+// void    projection(t_dot *points)
+// {
+
+//     int x;
+//     int y;
+//     int z;
+
+//     x = (*points).x;
+//     y = (*points).y;
+//     z = (*points).z;
+//     // points[i].x = (x + y) * cos(0.523599);
+//     // points[i].y = (x - y) * sin(0.523599) - z;
+//     // points[i].x = (x - y) * -cos(0.523599);
+//     // points[i].y = ((x + y) * sin(0.523599)) -z;
+//     // points[i].x = (x - y) * cos(0.523599);
+//     // points[i].y = ((x + y) * sin(0.523599)) - z;
+//     (*points).x = (x + y) * -cos(0.523599);
+//     (*points).y = ((x - y) * sin(0.523599)) - z;
+    
+// }
+
+// void    center(t_dot *po, t_mlx lx)
+// {   
+//         (*po).x += lx.width / 2;
+//         (*po).y += lx.width / 2;
+//         (*po).z += lx.width / 2;
+// }

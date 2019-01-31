@@ -6,7 +6,7 @@
 /*   By: bkiehn <bkiehn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:49:24 by bkiehn            #+#    #+#             */
-/*   Updated: 2019/01/30 23:11:57 by bkiehn           ###   ########.fr       */
+/*   Updated: 2019/01/31 21:43:12 by bkiehn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,18 @@ int     deal_key (int key, t_mlx *lx)
         lx->angle[0] = 0;
         lx->angle[1] = 0;
         lx->angle[2] = 0;
+        lx->h_window = 1000;
+        lx->w_window = 1000;
         redraw_grid(lx);
     }
     if (key == 126)
-        lx->w_window += 10;
+        lx->h_window -= 10;
     if (key == 125)
+        lx->h_window += 10;
+    if (key == 123)
         lx->w_window -= 10;
+    if (key == 124)
+        lx->w_window += 10;    
     if (key == 116)
         lx->growth += 1;
     if (key == 121)
@@ -75,9 +81,9 @@ void    draw_line(t_dot *a, t_dot *b, t_mlx lx)
     sy = y0 < y1 ? 1 : -1;
     err = (dx > dy ? dx : -dy) / 2;
     while (1)
-    {
-        //color = get_color(points, a, b, x0, y0);
-        mlx_pixel_put(lx.mlx_ptr, lx.win_ptr, x0, y0, 0xFF0000);
+    {   
+        color = get_color(a, b, x0, y0, lx.color_flag);
+        mlx_pixel_put(lx.mlx_ptr, lx.win_ptr, x0, y0, color);
         if ((x0 == x1) && (y0 ==y1))
             break;
         e2 = err;

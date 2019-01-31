@@ -6,14 +6,14 @@
 /*   By: bkiehn <bkiehn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/26 17:27:41 by bkiehn            #+#    #+#             */
-/*   Updated: 2019/01/30 23:13:23 by bkiehn           ###   ########.fr       */
+/*   Updated: 2019/01/31 21:22:57 by bkiehn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
 
-void        draw_column(t_dot **grid, t_mlx lx, int ww, int w)
+void        draw_string(t_dot **grid, t_mlx lx, int ww, int w)
 {
     t_dot   *gr;
     t_dot   *gr2;
@@ -41,7 +41,7 @@ void        draw_column(t_dot **grid, t_mlx lx, int ww, int w)
     }
 }
 
-void        draw_string(t_dot **grid, t_mlx lx)
+void        draw_column(t_dot **grid, t_mlx lx)
 {
     int     w;
     t_dot   *gr;
@@ -67,8 +67,8 @@ void        redraw_grid(t_mlx *lx)
 {
     mlx_clear_window(lx->mlx_ptr, lx->win_ptr);
     apply_tuning(&lx->dots, *lx);
-    draw_string(&lx->dots, *lx);
-    draw_column(&lx->dots, *lx, lx->w_grid, lx->w_grid);
+    draw_column(&lx->dots, *lx);
+    draw_string(&lx->dots, *lx, lx->w_grid, lx->w_grid);
 }
 
 void        apply_tuning(t_dot **grid, t_mlx lx)
@@ -78,8 +78,8 @@ void        apply_tuning(t_dot **grid, t_mlx lx)
     gr = *grid;
     while (gr)
     {
-        gr->x_c = (gr->x - (lx.w_grid / 2)) * lx.scale;
-        gr->y_c = (gr->y - (lx.h_grid / 2)) * lx.scale;
+        gr->x_c = (gr->x - (lx.h_grid / 2)) * lx.scale;
+        gr->y_c = (gr->y - (lx.w_grid / 2)) * lx.scale;
         gr->z_c = gr->z * lx.growth;
         projection (&gr);
         rotate(&gr, lx.angle);
@@ -88,11 +88,26 @@ void        apply_tuning(t_dot **grid, t_mlx lx)
     }
 }
 
+int         detect_color(t_dot **grid)
+{
+    t_dot   *gr;
+
+    gr = *grid;
+    while (gr)
+    {
+        if (gr->color != 0)
+            return (1);
+        gr = gr->next;
+    }
+    return (0);
+}
+
 void        tuning(t_dot **grid, int h, int w)
 {
     t_dot   *gr;
     t_mlx   lx;
 
+    lx.color_flag = detect_color(grid);
     lx.dots = *grid;
     lx.w_window = 1000;
     lx.h_window = 1000;
@@ -104,8 +119,8 @@ void        tuning(t_dot **grid, int h, int w)
     apply_tuning(grid, lx);
     lx.mlx_ptr = mlx_init();
     lx.win_ptr = mlx_new_window(lx.mlx_ptr, lx.w_window, lx.h_window, "fdf");
-    draw_string(grid, lx);
-    draw_column(grid, lx, lx.w_grid, lx.w_grid);
+    draw_column(grid, lx);
+    draw_string(grid, lx, lx.w_grid, lx.w_grid);
     mlx_hook(lx.win_ptr, 2, 0, deal_key, &lx);
     mlx_loop(lx.mlx_ptr);
 }
@@ -127,7 +142,7 @@ int     rfile(int fd)
     int     w;
     char    **line2;
     t_dot   *grid;
-    t_dot   *gr;
+    //t_dot   *gr;
     
     h = 0;
     grid = 0;
@@ -146,11 +161,11 @@ int     rfile(int fd)
         h++;
     }
     // gr = grid;
-    // // while (gr)
-    // // {
-    // //     printf("x = %d y = %d z = %d color = %d\n", gr->x, gr->y, gr->z, gr->color);
-    // //     gr = gr->next;
-    // // }
+    // while (gr)
+    // {
+    //     printf("x = %d y = %d z = %d color = %d\n", gr->x, gr->y, gr->z, gr->color);
+    //     gr = gr->next;
+    // }
     tuning(&grid, h, w);
     return (1);
 }

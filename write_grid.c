@@ -6,7 +6,7 @@
 /*   By: bkiehn <bkiehn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/29 16:24:55 by bkiehn            #+#    #+#             */
-/*   Updated: 2019/01/29 20:52:38 by bkiehn           ###   ########.fr       */
+/*   Updated: 2019/01/31 18:30:24 by bkiehn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,8 @@ void    write_grid(t_dot **grid, int y, char **line)
     i = 0;
     while (line[i] != 0)
     {
-        knot->y = y;
-        knot->x = i;
+        knot->x = y;
+        knot->y = i;
         knot->z = ft_atoi(line[i]);
         knot->color = hex_to_dec(line[i]);
         i++;

@@ -6,7 +6,7 @@
 /*   By: bkiehn <bkiehn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/25 18:10:11 by bkiehn            #+#    #+#             */
-/*   Updated: 2019/01/30 23:17:48 by bkiehn           ###   ########.fr       */
+/*   Updated: 2019/01/31 19:00:52 by bkiehn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,20 +52,20 @@ void    projection(t_dot **points)
     x = (**points).x_c;
     y = (**points).y_c;
     z = (**points).z_c;
-    // points[i].x = (x + y) * cos(0.523599);
-    // points[i].y = (x - y) * sin(0.523599) - z;
-    // points[i].x = (x - y) * -cos(0.523599);
-    // points[i].y = ((x + y) * sin(0.523599)) -z;
-    (**points).x_c = (x - y) * cos(0.523599);
-    (**points).y_c = ((x + y) * sin(0.523599)) - z;
-    // points[i].x = (x + y) * -cos(0.523599);
-    // points[i].y = ((x - y) * sin(0.523599)) - z;
+    // (**points).x_c = (x + y) * cos(0.523599);
+    // (**points).y_c  = (x - y) * sin(0.523599) - z;
+    (**points).x_c = (x - y) * -cos(0.523599);
+    (**points).y_c  = ((x + y) * sin(0.523599)) -z;
+    // (**points).x_c = (x - y) * cos(0.523599);
+    // (**points).y_c = ((x + y) * sin(0.523599)) - z;
+    // (**points).x_c = (x + y) * -cos(0.523599);
+    // (**points).y_c = ((x - y) * sin(0.523599)) - z;
     
 }
 
 void    center(t_dot **po, t_mlx lx)
 {   
         (**po).x_c += lx.w_window / 2;
-        (**po).y_c += lx.w_window / 2;
-        (**po).z_c += lx.w_window / 2;
+        (**po).y_c += lx.h_window / 2;
+        //(**po).z_c += lx.w_window / 2;
 }

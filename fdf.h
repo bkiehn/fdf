@@ -6,7 +6,7 @@
 /*   By: bkiehn <bkiehn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:52:22 by bkiehn            #+#    #+#             */
-/*   Updated: 2019/01/30 22:35:50 by bkiehn           ###   ########.fr       */
+/*   Updated: 2019/01/31 21:43:09 by bkiehn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <math.h>
 # include <fcntl.h>
 # include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
 
 typedef struct		s_dot
 {
@@ -42,22 +44,11 @@ typedef struct      s_mlx
 	int				scale;
 	int				growth;
 	double			angle[3];
+	int				movement_x;
+	int				movement_y;
+	int				color_flag;
 	t_dot			*dots;
 }                   t_mlx;
-
-typedef struct      s_redwraw
-{
-    void            *mlx_ptr;
-    void            *win_ptr;
-	int				height;
-	int				width;
-	int				i;
-	int				j;
-	int				**grid;
-	double			x;
-	double			y;
-	double			z;
-}                   t_redraw;
 
 typedef struct      s_color
 {
@@ -73,11 +64,11 @@ int     rfile(int fd);
 void    draw_line(t_dot *a, t_dot *b, t_mlx lx);
 int     deal_key (int key, t_mlx *lx);
 void    draw_grid(t_dot **grid, t_mlx lx);
-int     get_color(t_dot *points, int a, int b, int x, int y);
+int     get_color(t_dot *a, t_dot *b, int x, int y, int f);
 void    write_grid(t_dot **grid, int y, char **line);
 void	apply_tuning(t_dot **grid, t_mlx lx);
-void	draw_string(t_dot **grid, t_mlx lx);
-void    draw_column(t_dot **grid, t_mlx lx, int ww, int w);
+void	draw_column(t_dot **grid, t_mlx lx);
+void    draw_string(t_dot **grid, t_mlx lx, int ww, int w);
 void	redraw_grid(t_mlx *lx);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: bkiehn <bkiehn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/27 20:23:50 by bkiehn            #+#    #+#             */
-/*   Updated: 2019/01/27 22:29:16 by bkiehn           ###   ########.fr       */
+/*   Updated: 2019/01/31 22:12:30 by bkiehn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ double  percent(int start, int end, int current)
     return((distance == 0) ? 1.0 : (placement / distance));
 }
 
-int     get_color(t_dot *points, int a, int b, int x, int y)
+int     get_color(t_dot *a, t_dot *b, int x, int y, int f)
 {
     t_color     current;
     t_color     start;
@@ -38,34 +38,53 @@ int     get_color(t_dot *points, int a, int b, int x, int y)
     int         blue;
     double      percentage;
 
-    start.color = 0x00ff0000;
-    end.color = 0x00ffffff;
-    if (points[a].z > 500 || points[b].z > 500)
-    {
-        if (points[a].z == points[b].z)
-            return (start.color);
-        start.x = points[a].x;
-        start.y = points[a].y;
-        end.x = points[b].x;
-        end.y = points[b].y;
-        current.x = x;
-        current.y = y;
-        current.color = 0x000000ff;
-        delta.x = end.x - start.x;
-        delta.y = end.y - start.y;
-
-        if (current.color == end.color)
-            return (current.color);
-        if (delta.x > delta.y)
-            percentage = percent(start.x, end.x, current.x);
-        else
-            percentage = percent(start.y, end.y, current.y);
-        red = get_light((start.color >> 16) & 0xFF, (end.color >> 16) & 0xFF, percentage);
-        green = get_light((start.color >> 8) & 0xFF, (end.color >> 8) & 0xFF, percentage);
-        blue = get_light(start.color & 0xFF, end.color & 0xFF, percentage);
-        return ((red << 16) | (green << 8) | blue);
+    if (f == 0)
+    { 
+        start.color = 0x000000FF;
+        end.color = 0x0000FF00;
     }
     else
-        return (end.color);
-  
+    { 
+        if (a->color == 0)
+            start.color = 0x00FFFFFF;
+        else
+            start.color = a->color;
+        if (a->color == 0)
+            end.color = 0x00FFFFFF;
+        else
+            end.color = b->color;
+    }
+    if (b->z != 0)
+    {
+        start.x = a->x_c;
+        start.y = a->y_c;
+        end.x = b->x_c;
+        end.y = b->y_c;
+    }
+    else if (a->z != 0)
+    {
+        start.x = b->x_c;
+        start.y = b->y_c;
+        end.x = a->x_c;
+        end.y = a->y_c;
+    }
+    else
+        return (start.color);  
+    if (a->z == b->z)
+        return (end.color);      
+    current.x = x;
+    current.y = y;
+    //current.color = 0x00ff0000;
+    delta.x = end.x - start.x;
+    delta.y = end.y - start.y;
+    //if (current.color == end.color)
+    //    return (current.color);
+    if (delta.x > delta.y)
+        percentage = percent(start.x, end.x, current.x);
+    else
+        percentage = percent(start.y, end.y, current.y);
+    red = get_light((start.color >> 16) & 0xFF, (end.color >> 16) & 0xFF, percentage);
+    green = get_light((start.color >> 8) & 0xFF, (end.color >> 8) & 0xFF, percentage);
+    blue = get_light(start.color & 0xFF, end.color & 0xFF, percentage);
+    return ((red << 16) | (green << 8) | blue);
 }

@@ -6,113 +6,68 @@
 /*   By: bkiehn <bkiehn@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/01/22 14:49:24 by bkiehn            #+#    #+#             */
-/*   Updated: 2019/01/31 21:43:12 by bkiehn           ###   ########.fr       */
+/*   Updated: 2019/02/04 21:01:53 by bkiehn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-int     deal_key (int key, t_mlx *lx)
+void	defolt(t_mlx *lx)
 {
-    if (key == 92)
-    {
-        lx->growth = 1;
-        lx->scale = 30;
-        lx->angle[0] = 0;
-        lx->angle[1] = 0;
-        lx->angle[2] = 0;
-        lx->h_window = 1000;
-        lx->w_window = 1000;
-        redraw_grid(lx);
-    }
-    if (key == 126)
-        lx->h_window -= 10;
-    if (key == 125)
-        lx->h_window += 10;
-    if (key == 123)
-        lx->w_window -= 10;
-    if (key == 124)
-        lx->w_window += 10;    
-    if (key == 116)
-        lx->growth += 1;
-    if (key == 121)
-        lx->growth -= 1;
-    if (key == 86)
-        lx->angle[0] += 0.069813; 
-    if (key == 83)
-        lx->angle[0] -= 0.069813;
-    if (key == 87)
-        lx->angle[1] += 0.069813; 
-    if (key == 84)
-        lx->angle[1] -= 0.069813;
-    if (key == 88)
-        lx->angle[2] += 0.069813; 
-    if (key == 85)
-        lx->angle[2] -= 0.069813;
-    if (key == 69)
-        lx->scale += 5;
-    if (key == 78)
-        lx->scale -= 5;
-    if (key == 53)
-        exit (0);
-    redraw_grid(lx);
-    return (0);
+	lx->growth = 1;
+	lx->growth_get = 1;
+	lx->z_offset = 30;
+	if (lx->projection == 1)
+		lx->scale = lx->w_window / (lx->w_grid * 2);
+	else if (lx->projection == 2)
+		lx->scale = -lx->w_window / (lx->w_grid * 2);
+	else if (lx->projection == 3)
+		lx->scale = -lx->w_window / (lx->w_grid * 20);
+	lx->angle[0] = 0;
+	lx->angle[1] = 0;
+	lx->angle[2] = 0;
+	lx->h_window = 1000;
+	lx->w_window = 1000;
 }
 
-void    draw_line(t_dot *a, t_dot *b, t_mlx lx)
+int		deal_key(int key, t_mlx *lx)
 {
-    int     dx;
-    int     dy;
-    int     sx;
-    int     sy;
-    int     err;
-    int     e2;
-    int     c;
-    int     x0 = a->x_c;
-    int     y0 = a->y_c;
-    int     x1 = b->x_c;
-    int     y1 = b->y_c;
-    int     color;
-    
-    c = 0;
-    dx = abs(x1 - x0);
-    dy = abs(y1 - y0);
-    sx = x0 < x1 ? 1 : -1;
-    sy = y0 < y1 ? 1 : -1;
-    err = (dx > dy ? dx : -dy) / 2;
-    while (1)
-    {   
-        color = get_color(a, b, x0, y0, lx.color_flag);
-        mlx_pixel_put(lx.mlx_ptr, lx.win_ptr, x0, y0, color);
-        if ((x0 == x1) && (y0 ==y1))
-            break;
-        e2 = err;
-        if (e2 > -dx)
-        {
-            err -= dy;
-            x0 += sx;
-        }
-        if (e2 < dy)
-        {
-            err += dx;
-            y0 += sy;
-        }
-        c++;
-    }
+	if (key == 92 || (key >= 18 && key <= 20))
+		change_proj(key, lx);
+	if (key >= 123 && key <= 126)
+		move(key, lx);
+	if (key == 116)
+	{
+		lx->growth += 1;
+		lx->growth_get += 0.1;
+	}
+	if (key == 121)
+	{
+		lx->growth -= 1;
+		lx->growth_get -= 0.1;
+	}
+	if (key >= 83 && key <= 88)
+		change_angle(key, lx);
+	if (key == 69 || ((key == 78 && lx->scale) != 0))
+		change_scale(key, lx);
+	if (key == 53)
+		exit(0);
+	redraw_grid(lx);
+	draw_gui(lx);
+	return (0);
 }
 
-int     main(int argc, char **argv)
+int		main(int argc, char **argv)
 {
-    int     fd;
-   
-    if ((argc == 1 || argc > 2))
-        ft_putendl("Usage: ./fdf <filename>");
-    else if ((fd = open(argv[1], O_RDONLY)) == -1)
-    {
-        ft_putstr("No file ");
-        ft_putendl(argv[1]);
-    }
+	int		fd;
 
-    else if (!(rfile(fd)))
-        ft_putendl("error");
+	if ((argc == 1 || argc > 2))
+		ft_putendl("Usage: ./fdf <filename>");
+	else if ((fd = open(argv[1], O_RDONLY)) == -1)
+	{
+		ft_putstr("No file ");
+		ft_putendl(argv[1]);
+	}
+	else if (!(rfile(fd)))
+		ft_putendl("error");
 }
